@@ -11,6 +11,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": "fechasok",
+				"folderPath": "Correr",
 				"container": "silver"
 			},
 			"columnDelimiter": ",",
