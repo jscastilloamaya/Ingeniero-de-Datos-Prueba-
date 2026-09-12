@@ -19,7 +19,15 @@
 					"name": "source2"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTableCliente",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "FilasNecesarias"
@@ -101,7 +109,7 @@
 				"     skipDuplicateMapOutputs: true) ~> PreID",
 				"PreID aggregate(groupBy(mycols = sha2(256,columns())),",
 				"     each(match(true()), $$ = first($$))) ~> EliminarDuplicadosdeID",
-				"EliminarDuplicadosdeID keyGenerate(output({id_cliente } as long),",
+				"EliminarDuplicadosdeID keyGenerate(output(id_cliente as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> IDCliente",
 				"IDCliente, idciudad join(EliminarDuplicadosdeID@{número de identificación} == FilasNecesarias@{número de identificación},",
@@ -110,18 +118,41 @@
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join1",
 				"join1 select(mapColumn(",
-				"          id_cliente = {id_cliente },",
+				"          id_cliente,",
 				"          tipo_identificacion = {tipo de identificación},",
-				"          {numero_identificacion } = FilasNecesarias@{número de identificación},",
+				"          numero_identificacion = FilasNecesarias@{número de identificación},",
 				"          nombres,",
-				"          {fechanacimiento } = {fecha de nacimiento},",
+				"          fechanacimiento = {fecha de nacimiento},",
 				"          direccion = {dirección del cliente},",
 				"          telefono = {teléfono del cliente},",
 				"          correo = {correo del cliente},",
 				"          id_ciudad",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id_cliente as integer,",
+				"          tipo_identificacion as string,",
+				"          numero_identificacion as string,",
+				"          nombres as string,",
+				"          fecha_nacimiento as date,",
+				"          direccion as string,",
+				"          telefono as string,",
+				"          correo as string,",
+				"          id_ciudad as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}
