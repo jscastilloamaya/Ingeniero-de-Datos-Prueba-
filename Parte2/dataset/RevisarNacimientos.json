@@ -1,0 +1,22 @@
+{
+	"name": "RevisarNacimientos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "datalakebogota1vin",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "silver"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
