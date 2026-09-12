@@ -33,7 +33,15 @@
 					"name": "TablaTiempo"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable1",
+						"type": "DatasetReference"
+					},
+					"name": "TransacGOLD"
+				}
+			],
 			"transformations": [
 				{
 					"name": "idtransac"
@@ -48,7 +56,7 @@
 					"name": "idtiempo"
 				},
 				{
-					"name": "select1"
+					"name": "ColumsNecesarias"
 				}
 			],
 			"scriptLines": [
@@ -144,7 +152,30 @@
 				"          numero_cuenta = {número de cuenta}",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> ColumsNecesarias",
+				"ColumsNecesarias sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id_transaccion as long,",
+				"          id_cliente as integer,",
+				"          id_producto as integer,",
+				"          id_tiempo as integer,",
+				"          tipo_transaccion as string,",
+				"          monto_transaccion as decimal(18,2),",
+				"          numero_cuenta as long,",
+				"          fecha_carga as timestamp,",
+				"          batch_id as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> TransacGOLD"
 			]
 		}
 	}
