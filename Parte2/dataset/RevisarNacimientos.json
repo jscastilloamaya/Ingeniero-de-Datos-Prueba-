@@ -10,7 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "revisarfechas",
+				"fileName": "revisarfechas.csv",
+				"folderPath": "Revisar",
 				"container": "silver"
 			},
 			"columnDelimiter": ",",
