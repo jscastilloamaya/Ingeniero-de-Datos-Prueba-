@@ -1,0 +1,43 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="UybymfvrovwoeBRGn_Be">
+    <mxGraphModel dx="861" dy="552" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="jsGgxAonSPo1golel4tJ-3" edge="1" parent="1" source="jsGgxAonSPo1golel4tJ-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="jsGgxAonSPo1golel4tJ-2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="jsGgxAonSPo1golel4tJ-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;" value="[Fuentes Origen]&lt;div&gt;&lt;br&gt;&lt;div&gt;Transacciones (OLTP / Archivos)&lt;br&gt;&amp;nbsp;Clientes (CRM / Core)&lt;br&gt;Riesgo Crediticio (Centrales de Riesgo)&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="225" x="260" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="jsGgxAonSPo1golel4tJ-5" edge="1" parent="1" source="jsGgxAonSPo1golel4tJ-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="jsGgxAonSPo1golel4tJ-4" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="jsGgxAonSPo1golel4tJ-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;" value="1. CAPA BRONZE (Data Lake Storage Gen2 / Parquet-JSON-CSV Crudo)&amp;nbsp;&lt;div&gt;- Datos tal cual llegan del origen (inmutables)&lt;/div&gt;&lt;div&gt;- Historización completa sin transformaciones&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="407.5" x="168.75" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="jsGgxAonSPo1golel4tJ-7" edge="1" parent="1" source="jsGgxAonSPo1golel4tJ-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="jsGgxAonSPo1golel4tJ-6" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="jsGgxAonSPo1golel4tJ-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;" value="&lt;div&gt;&amp;nbsp;2. CAPA SILVER (Data Lake Storage Gen2 / Delta-Parquet Limpio)&amp;nbsp;&lt;/div&gt;&lt;div&gt;- Completitud: NULL check en numero_identificacion y monto&amp;nbsp;&lt;/div&gt;&lt;div&gt;- Unicidad: Deduplicación por reintentos de origen&amp;nbsp;&lt;/div&gt;&lt;div&gt;- Rangos Válidos: monto &amp;gt; 0, fecha_nacimiento coherente&lt;/div&gt;&lt;div&gt;- Estandarización: Normalización de fechas mixtas&lt;/div&gt;&lt;div&gt;- Excepciones: Desvío de filas corruptas a Quarantine/Error Log&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="407.5" x="168.75" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="jsGgxAonSPo1golel4tJ-11" edge="1" parent="1" source="jsGgxAonSPo1golel4tJ-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="jsGgxAonSPo1golel4tJ-10" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="jsGgxAonSPo1golel4tJ-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;" value="&amp;nbsp;3. CAPA GOLD (Azure Synapse Analytics - Dedicated SQL Pool)&lt;div&gt;- Modelo en Constelación (Star/Constellation Schema)&lt;/div&gt;&lt;div&gt;- Integridad Referencial: Validación por pipeline antes de insertar&amp;nbsp;&lt;/div&gt;&lt;div&gt;- Control de Cambios: SCD Tipo 2 en dim.Cliente&lt;/div&gt;&lt;div&gt;- Columnas de Control: fecha_carga, batch_id&amp;nbsp;&amp;nbsp;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="407.5" x="168.75" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="jsGgxAonSPo1golel4tJ-13" edge="1" parent="1" source="jsGgxAonSPo1golel4tJ-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="jsGgxAonSPo1golel4tJ-12" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="jsGgxAonSPo1golel4tJ-10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Capa de Consumo / Reporting] ─&amp;gt; Power BI" vertex="1">
+          <mxGeometry height="60" width="280" x="232.5" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="jsGgxAonSPo1golel4tJ-12" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Actor" vertex="1">
+          <mxGeometry height="60" width="30" x="576.25" y="570" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

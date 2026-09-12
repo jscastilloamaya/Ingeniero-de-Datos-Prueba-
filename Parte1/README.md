@@ -31,6 +31,9 @@ c. Consideraciones de calidad, gobierno y seguridad
 
 ## Respuesta
 ![Diagrama del modelo](diagrama.png)
+**Figura 1.** Diagrama del modelo
+
+
 ### Justificación del modelo dimensional
 Elegí una constelación de hechos (galaxy schema): dos tablas de hechos (fact.Transacciones y fact.ReporteRiesgo) que comparten dimensiones conformadas (dim.Cliente, dim.Tiempo), con dim.Ciudad normalizada en copo de nieve respecto a dim.Cliente.
 
@@ -49,6 +52,8 @@ La razón es que el caso de negocio integra dos procesos con grano distinto, tra
 | Clustering                          | CLUSTER BY id_cliente — ordena físicamente filas dentro de cada partición | Ordered Clustered Columnstore Index: CLUSTERED COLUMNSTORE INDEX ORDER (id_cliente)                              |
 | (sin equivalente en BigQuery)       | —                                                                  | Distribución HASH(id_cliente) en dimensión y hechos por igual, para lograr joins co-localizados sin movimiento de datos entre nodos — concepto propio de motores MPP |
 
+![Diagrama del modelo](arquitectura.png)
+**Figura 1.** Diagrama del modelo
 
 **Trazabilidad y auditoría**
 - Columnas de control en cada tabla de hechos: fecha_carga y batch_id (identificador único por ejecución del pipeline, que agrupa todas las filas cargadas en esa corrida —permite reprocesar o hacer rollback de un batch completo sin tocar el resto de la tabla).
