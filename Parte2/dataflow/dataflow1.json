@@ -6,14 +6,27 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "DatodCrudos",
+						"referenceName": "DCrudos",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "exists1"
+				},
+				{
+					"name": "aggregate1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          {tipo de identificación} as string,",
@@ -35,7 +48,21 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1"
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 select(mapColumn(",
+				"          ciudad",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"source1 select(mapColumn(",
+				"          {tipo de producto}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select1, source1 exists(select1@ciudad == source1@ciudad,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> exists1",
+				"select2 aggregate({tipo de producto} = max({tipo de producto})) ~> aggregate1"
 			]
 		}
 	}
