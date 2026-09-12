@@ -15,10 +15,17 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "AzureSynapseAnalyticsTable1",
+						"referenceName": "AzureSynapseAnalyticsTableProduc",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "TPGOLD"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTableCiudad",
+						"type": "DatasetReference"
+					},
+					"name": "CIUDGOLD"
 				}
 			],
 			"transformations": [
@@ -36,6 +43,15 @@
 				},
 				{
 					"name": "ciud"
+				},
+				{
+					"name": "ciudElmiminarDuplicados"
+				},
+				{
+					"name": "ciudID"
+				},
+				{
+					"name": "ciudSilver"
 				}
 			],
 			"scriptLines": [
@@ -81,6 +97,18 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> ciud",
+				"ciud aggregate(groupBy(mycols = sha2(256,columns())),",
+				"     each(match(true()), $$ = first($$))) ~> ciudElmiminarDuplicados",
+				"ciudElmiminarDuplicados keyGenerate(output(id_ciudad as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> ciudID",
+				"ciudID select(mapColumn(",
+				"          mycols,",
+				"          ciudad,",
+				"          id_ciudad",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> ciudSilver",
 				"TPSilver sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -96,7 +124,23 @@
 				"     allowCopyCommand: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     errorHandlingOption: 'stopOnFirstError') ~> TPGOLD",
+				"ciudSilver sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id_ciudad as integer,",
+				"          ciudad as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> CIUDGOLD"
 			]
 		}
 	}

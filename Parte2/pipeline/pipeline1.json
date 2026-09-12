@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Data flow1",
+				"name": "DIMENSIONES",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -18,6 +18,13 @@
 					"dataflow": {
 						"referenceName": "dataflow1",
 						"type": "DataFlowReference"
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "datalakebogota1vin",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "silver"
 					},
 					"compute": {
 						"coreCount": 8,
