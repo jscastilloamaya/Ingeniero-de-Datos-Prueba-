@@ -119,6 +119,13 @@
 						"referenceName": "dataflow1",
 						"type": "DataFlowReference"
 					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "datalakebogota1vin",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "silver"
+					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
