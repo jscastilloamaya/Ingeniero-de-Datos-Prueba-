@@ -25,7 +25,7 @@
 						"referenceName": "AzureSynapseAnalyticsTableCliente",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "ClientesGOLD"
 				}
 			],
 			"transformations": [
@@ -154,7 +154,7 @@
 				"     allowCopyCommand: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     errorHandlingOption: 'stopOnFirstError') ~> ClientesGOLD"
 			]
 		}
 	}
