@@ -28,3 +28,7 @@
 a. Diseño de modelo lógico y físico adecuado  
 b. Estrategias de optimización y escalabilidad  
 c. Consideraciones de calidad, gobierno y seguridad
+
+## Respuesta
+![Diagrama del modelo](Parte 1/diagrama.png)
+
