@@ -15,16 +15,16 @@
 			"sinks": [],
 			"transformations": [
 				{
-					"name": "select2"
+					"name": "TP"
 				},
 				{
-					"name": "DistinctRows"
+					"name": "TPEliminarDupiclados"
 				},
 				{
-					"name": "surrogateKey1"
+					"name": "TPID"
 				},
 				{
-					"name": "select3"
+					"name": "TPSilver"
 				}
 			],
 			"scriptLines": [
@@ -53,18 +53,18 @@
 				"          {tipo de producto}",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select2",
-				"select2 aggregate(groupBy(mycols = sha2(256,columns())),",
-				"     each(match(true()), $$ = first($$))) ~> DistinctRows",
-				"DistinctRows keyGenerate(output(id_producto as long),",
+				"     skipDuplicateMapOutputs: true) ~> TP",
+				"TP aggregate(groupBy(mycols = sha2(256,columns())),",
+				"     each(match(true()), $$ = first($$))) ~> TPEliminarDupiclados",
+				"TPEliminarDupiclados keyGenerate(output(id_producto as long),",
 				"     startAt: 1L,",
-				"     stepValue: 1L) ~> surrogateKey1",
-				"surrogateKey1 select(mapColumn(",
+				"     stepValue: 1L) ~> TPID",
+				"TPID select(mapColumn(",
 				"          tipo_producto = {tipo de producto},",
 				"          id_producto",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select3"
+				"     skipDuplicateMapOutputs: true) ~> TPSilver"
 			]
 		}
 	}
