@@ -1,5 +1,5 @@
 {
-	"name": "DelimitedText1",
+	"name": "DatodCrudos",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "datalakebogota1vin",

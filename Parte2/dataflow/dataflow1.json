@@ -1,0 +1,42 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DatodCrudos",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          {tipo de identificación} as string,",
+				"          {número de identificación} as string,",
+				"          {número de cuenta} as string,",
+				"          nombres as string,",
+				"          {tipo transacción} as string,",
+				"          {monto transacción} as string,",
+				"          {tipo de producto} as string,",
+				"          ciudad as string,",
+				"          {fecha-hora} as string,",
+				"          {fecha de nacimiento} as string,",
+				"          {dirección del cliente} as string,",
+				"          {teléfono del cliente} as string,",
+				"          {correo del cliente} as string,",
+				"          {reporte centrales de riesgo} as string,",
+				"          {monto reporte de central de riesgo} as string,",
+				"          {tiempo en mora del reporte de riesgo} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1"
+			]
+		}
+	}
+}
