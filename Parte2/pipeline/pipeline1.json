@@ -65,9 +65,16 @@
 				}
 			},
 			{
-				"name": "Data flow1",
+				"name": "Clientes",
 				"type": "ExecuteDataFlow",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "DIMENSIONES",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
