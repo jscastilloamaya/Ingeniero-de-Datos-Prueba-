@@ -33,6 +33,9 @@
 				},
 				{
 					"name": "TPSilver"
+				},
+				{
+					"name": "ciud"
 				}
 			],
 			"scriptLines": [
@@ -73,6 +76,11 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> TPSilver",
+				"source1 select(mapColumn(",
+				"          ciudad",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> ciud",
 				"TPSilver sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
