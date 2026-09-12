@@ -1,12 +1,12 @@
 {
-	"name": "dataflow1",
+	"name": "DimensionesPeque",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "DCrudos",
+						"referenceName": "fechasok",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
@@ -15,18 +15,43 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "RevisarNacimientos",
+						"referenceName": "AzureSynapseAnalyticsTableProduc",
 						"type": "DatasetReference"
 					},
-					"name": "RevisarNacimiento"
+					"name": "TPGOLD"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTableCiudad",
+						"type": "DatasetReference"
+					},
+					"name": "CIUDGOLD"
 				}
 			],
 			"transformations": [
 				{
-					"name": "FechaNormalizada"
+					"name": "TP"
 				},
 				{
-					"name": "filter1"
+					"name": "TPEliminarDupiclados"
+				},
+				{
+					"name": "TPID"
+				},
+				{
+					"name": "TPSilver"
+				},
+				{
+					"name": "ciud"
+				},
+				{
+					"name": "ciudElmiminarDuplicados"
+				},
+				{
+					"name": "ciudID"
+				},
+				{
+					"name": "ciudSilver"
 				}
 			],
 			"scriptLines": [
@@ -46,19 +71,79 @@
 				"          {correo del cliente} as string,",
 				"          {reporte centrales de riesgo} as string,",
 				"          {monto reporte de central de riesgo} as string,",
-				"          {tiempo en mora del reporte de riesgo} as string",
+				"          {tiempo en mora del reporte de riesgo} as string,",
+				"          fecha_hora_normalizada as string,",
+				"          fecha as string,",
+				"          hora as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 derive(fecha_hora_normalizada = iif(regexMatch({fecha-hora}, `^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$`), toTimestamp({fecha-hora}, 'yyyy-MM-dd HH:mm:ss'), toTimestamp(toLong({fecha-hora}) * 1000L)),",
-				"          fecha = toDate(iif(regexMatch({fecha-hora}, `^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$`), toTimestamp({fecha-hora}, 'yyyy-MM-dd HH:mm:ss'), toTimestamp(toLong({fecha-hora}) * 1000L))),",
-				"          hora = hour(iif(regexMatch({fecha-hora}, `^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$`), toTimestamp({fecha-hora}, 'yyyy-MM-dd HH:mm:ss'), toTimestamp(toLong({fecha-hora}) * 1000L)))) ~> FechaNormalizada",
-				"FechaNormalizada filter(year(toDate({fecha de nacimiento}, 'yyyy-MM-dd')) < 1950) ~> filter1",
-				"filter1 sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
+				"source1 select(mapColumn(",
+				"          {tipo de producto}",
+				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> RevisarNacimiento"
+				"     skipDuplicateMapOutputs: true) ~> TP",
+				"TP aggregate(groupBy(mycols = sha2(256,columns())),",
+				"     each(match(true()), $$ = first($$))) ~> TPEliminarDupiclados",
+				"TPEliminarDupiclados keyGenerate(output(id_producto as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> TPID",
+				"TPID select(mapColumn(",
+				"          tipo_producto = {tipo de producto},",
+				"          id_producto",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> TPSilver",
+				"source1 select(mapColumn(",
+				"          ciudad",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> ciud",
+				"ciud aggregate(groupBy(mycols = sha2(256,columns())),",
+				"     each(match(true()), $$ = first($$))) ~> ciudElmiminarDuplicados",
+				"ciudElmiminarDuplicados keyGenerate(output(id_ciudad as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> ciudID",
+				"ciudID select(mapColumn(",
+				"          mycols,",
+				"          ciudad,",
+				"          id_ciudad",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> ciudSilver",
+				"TPSilver sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id_producto as integer,",
+				"          tipo_producto as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> TPGOLD",
+				"ciudSilver sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id_ciudad as integer,",
+				"          ciudad as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> CIUDGOLD"
 			]
 		}
 	}

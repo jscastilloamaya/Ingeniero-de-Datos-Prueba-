@@ -1,0 +1,99 @@
+{
+	"name": "fechasok",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "datalakebogota1vin",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "silver"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "tipo de identificación",
+				"type": "String"
+			},
+			{
+				"name": "número de identificación",
+				"type": "String"
+			},
+			{
+				"name": "número de cuenta",
+				"type": "String"
+			},
+			{
+				"name": "nombres",
+				"type": "String"
+			},
+			{
+				"name": "tipo transacción",
+				"type": "String"
+			},
+			{
+				"name": "monto transacción",
+				"type": "String"
+			},
+			{
+				"name": "tipo de producto",
+				"type": "String"
+			},
+			{
+				"name": "ciudad",
+				"type": "String"
+			},
+			{
+				"name": "fecha-hora",
+				"type": "String"
+			},
+			{
+				"name": "fecha de nacimiento",
+				"type": "String"
+			},
+			{
+				"name": "dirección del cliente",
+				"type": "String"
+			},
+			{
+				"name": "teléfono del cliente",
+				"type": "String"
+			},
+			{
+				"name": "correo del cliente",
+				"type": "String"
+			},
+			{
+				"name": "reporte centrales de riesgo",
+				"type": "String"
+			},
+			{
+				"name": "monto reporte de central de riesgo",
+				"type": "String"
+			},
+			{
+				"name": "tiempo en mora del reporte de riesgo",
+				"type": "String"
+			},
+			{
+				"name": "fecha_hora_normalizada",
+				"type": "String"
+			},
+			{
+				"name": "fecha",
+				"type": "String"
+			},
+			{
+				"name": "hora",
+				"type": "String"
+			}
+		]
+	}
+}
