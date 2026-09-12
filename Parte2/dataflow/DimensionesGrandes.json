@@ -9,14 +9,14 @@
 						"referenceName": "fechasok",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "LeerSilver"
 				},
 				{
 					"dataset": {
 						"referenceName": "AzureSynapseAnalyticsTableCiudad",
 						"type": "DatasetReference"
 					},
-					"name": "source2"
+					"name": "TablaCiudad"
 				}
 			],
 			"sinks": [
@@ -75,7 +75,7 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1",
+				"     ignoreNoFilesFound: false) ~> LeerSilver",
 				"source(output(",
 				"          id_ciudad as integer,",
 				"          ciudad as string",
@@ -84,8 +84,8 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table',",
-				"     staged: true) ~> source2",
-				"source1 select(mapColumn(",
+				"     staged: true) ~> TablaCiudad",
+				"LeerSilver select(mapColumn(",
 				"          {tipo de identificación},",
 				"          {número de identificación},",
 				"          nombres,",
@@ -97,7 +97,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> FilasNecesarias",
-				"FilasNecesarias, source2 join(FilasNecesarias@ciudad == source2@ciudad,",
+				"FilasNecesarias, TablaCiudad join(FilasNecesarias@ciudad == TablaCiudad@ciudad,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
