@@ -1,0 +1,161 @@
+{
+	"name": "DimensionesGrandes",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "fechasok",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTableCiudad",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTableCliente",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "FilasNecesarias"
+				},
+				{
+					"name": "idciudad"
+				},
+				{
+					"name": "PreID"
+				},
+				{
+					"name": "EliminarDuplicadosdeID"
+				},
+				{
+					"name": "IDCliente"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {tipo de identificación} as string,",
+				"          {número de identificación} as string,",
+				"          {número de cuenta} as string,",
+				"          nombres as string,",
+				"          {tipo transacción} as string,",
+				"          {monto transacción} as string,",
+				"          {tipo de producto} as string,",
+				"          ciudad as string,",
+				"          {fecha-hora} as string,",
+				"          {fecha de nacimiento} as string,",
+				"          {dirección del cliente} as string,",
+				"          {teléfono del cliente} as string,",
+				"          {correo del cliente} as string,",
+				"          {reporte centrales de riesgo} as string,",
+				"          {monto reporte de central de riesgo} as string,",
+				"          {tiempo en mora del reporte de riesgo} as string,",
+				"          fecha_hora_normalizada as string,",
+				"          fecha as string,",
+				"          hora as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source(output(",
+				"          id_ciudad as integer,",
+				"          ciudad as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> source2",
+				"source1 select(mapColumn(",
+				"          {tipo de identificación},",
+				"          {número de identificación},",
+				"          nombres,",
+				"          ciudad,",
+				"          {fecha de nacimiento},",
+				"          {dirección del cliente},",
+				"          {teléfono del cliente},",
+				"          {correo del cliente}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> FilasNecesarias",
+				"FilasNecesarias, source2 join(FilasNecesarias@ciudad == source2@ciudad,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> idciudad",
+				"FilasNecesarias select(mapColumn(",
+				"          {número de identificación}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> PreID",
+				"PreID aggregate(groupBy(mycols = sha2(256,columns())),",
+				"     each(match(true()), $$ = first($$))) ~> EliminarDuplicadosdeID",
+				"EliminarDuplicadosdeID keyGenerate(output({id_cliente } as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> IDCliente",
+				"IDCliente, idciudad join(EliminarDuplicadosdeID@{número de identificación} == FilasNecesarias@{número de identificación},",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 select(mapColumn(",
+				"          {id_cliente },",
+				"          {tipo de identificación},",
+				"          {número de identificación} = FilasNecesarias@{número de identificación},",
+				"          nombres,",
+				"          ciudad = FilasNecesarias@ciudad,",
+				"          {fecha de nacimiento},",
+				"          {dirección del cliente},",
+				"          {teléfono del cliente},",
+				"          {correo del cliente},",
+				"          id_ciudad,",
+				"          ciudad = source2@ciudad",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id_cliente as integer,",
+				"          tipo_identificacion as string,",
+				"          numero_identificacion as string,",
+				"          nombres as string,",
+				"          fecha_nacimiento as date,",
+				"          direccion as string,",
+				"          telefono as string,",
+				"          correo as string,",
+				"          id_ciudad as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}
