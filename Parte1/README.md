@@ -52,8 +52,10 @@ La razón es que el caso de negocio integra dos procesos con grano distinto, tra
 | Clustering                          | CLUSTER BY id_cliente — ordena físicamente filas dentro de cada partición | Ordered Clustered Columnstore Index: CLUSTERED COLUMNSTORE INDEX ORDER (id_cliente)                              |
 | (sin equivalente en BigQuery)       | —                                                                  | Distribución HASH(id_cliente) en dimensión y hechos por igual, para lograr joins co-localizados sin movimiento de datos entre nodos — concepto propio de motores MPP |
 
-![Diagrama del modelo](arquitectura.png)
-**Figura 1.** Diagrama del modelo
+
+![Figura 2. Diagrama arquitectura](arquitectura.png)
+
+**Figura 2.** Diagrama arquitectura
 
 **Trazabilidad y auditoría**
 - Columnas de control en cada tabla de hechos: fecha_carga y batch_id (identificador único por ejecución del pipeline, que agrupa todas las filas cargadas en esa corrida —permite reprocesar o hacer rollback de un batch completo sin tocar el resto de la tabla).
