@@ -9,7 +9,7 @@
 						"referenceName": "DCrudos",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "DBronze"
 				}
 			],
 			"sinks": [
@@ -60,8 +60,8 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 derive(fecha_hora_normalizada = iif(regexMatch({fecha-hora}, `^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$`), toTimestamp({fecha-hora}, 'yyyy-MM-dd HH:mm:ss'), toTimestamp(toLong({fecha-hora}) * 1000L)),",
+				"     ignoreNoFilesFound: false) ~> DBronze",
+				"DBronze derive(fecha_hora_normalizada = iif(regexMatch({fecha-hora}, `^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$`), toTimestamp({fecha-hora}, 'yyyy-MM-dd HH:mm:ss'), toTimestamp(toLong({fecha-hora}) * 1000L)),",
 				"          fecha = toDate(iif(regexMatch({fecha-hora}, `^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$`), toTimestamp({fecha-hora}, 'yyyy-MM-dd HH:mm:ss'), toTimestamp(toLong({fecha-hora}) * 1000L))),",
 				"          hora = hour(iif(regexMatch({fecha-hora}, `^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$`), toTimestamp({fecha-hora}, 'yyyy-MM-dd HH:mm:ss'), toTimestamp(toLong({fecha-hora}) * 1000L)))) ~> FechaNormalizada",
 				"FechaNormalizada filter(year(toDate({fecha de nacimiento}, 'yyyy-MM-dd')) < 1950) ~> menores1950",
