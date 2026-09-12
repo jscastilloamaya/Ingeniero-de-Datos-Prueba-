@@ -15,17 +15,24 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "AzureSynapseAnalyticsTableProduc",
-						"type": "DatasetReference"
-					},
-					"name": "TPGOLD"
-				},
-				{
-					"dataset": {
 						"referenceName": "AzureSynapseAnalyticsTableCiudad",
 						"type": "DatasetReference"
 					},
 					"name": "CIUDGOLD"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTableTiempo",
+						"type": "DatasetReference"
+					},
+					"name": "FechaGOLD"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTableProduc",
+						"type": "DatasetReference"
+					},
+					"name": "TPGOLD"
 				}
 			],
 			"transformations": [
@@ -52,6 +59,21 @@
 				},
 				{
 					"name": "ciudSilver"
+				},
+				{
+					"name": "fechaa"
+				},
+				{
+					"name": "fechaEliminarDuplicados"
+				},
+				{
+					"name": "fechaid"
+				},
+				{
+					"name": "fechaSilver"
+				},
+				{
+					"name": "TiempoDerivado"
 				}
 			],
 			"scriptLines": [
@@ -112,22 +134,47 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> ciudSilver",
-				"TPSilver sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     input(",
-				"          id_producto as integer,",
-				"          tipo_producto as string",
+				"source1 select(mapColumn(",
+				"          fecha",
 				"     ),",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     format: 'table',",
-				"     staged: true,",
-				"     allowCopyCommand: true,",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> TPGOLD",
+				"     skipDuplicateMapOutputs: true) ~> fechaa",
+				"fechaa aggregate(groupBy(mycols = sha2(256,columns())),",
+				"     each(match(true()), $$ = first($$))) ~> fechaEliminarDuplicados",
+				"fechaEliminarDuplicados keyGenerate(output(id_tiempo as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> fechaid",
+				"fechaid select(mapColumn(",
+				"          fecha,",
+				"          id_tiempo",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> fechaSilver",
+				"fechaSilver derive(fecha = toDate(fecha, 'yyyy-MM-dd'),",
+				"          anno = year(toDate(fecha, 'yyyy-MM-dd')),",
+				"          mes = month(toDate(fecha, 'yyyy-MM-dd')),",
+				"          dia = dayOfMonth(toDate(fecha, 'yyyy-MM-dd')),",
+				"          trimestre = concat('Q', toString(ceil(month(toDate(fecha, 'yyyy-MM-dd')) / 3.0))),",
+				"          nombre_mes = case(month(toDate(fecha, 'yyyy-MM-dd')) == 1, 'Enero',",
+				"            month(toDate(fecha, 'yyyy-MM-dd')) == 2, 'Febrero',",
+				"            month(toDate(fecha, 'yyyy-MM-dd')) == 3, 'Marzo',",
+				"            month(toDate(fecha, 'yyyy-MM-dd')) == 4, 'Abril',",
+				"            month(toDate(fecha, 'yyyy-MM-dd')) == 5, 'Mayo',",
+				"            month(toDate(fecha, 'yyyy-MM-dd')) == 6, 'Junio',",
+				"            month(toDate(fecha, 'yyyy-MM-dd')) == 7, 'Julio',",
+				"            month(toDate(fecha, 'yyyy-MM-dd')) == 8, 'Agosto',",
+				"            month(toDate(fecha, 'yyyy-MM-dd')) == 9, 'Septiembre',",
+				"            month(toDate(fecha, 'yyyy-MM-dd')) == 10, 'Octubre',",
+				"            month(toDate(fecha, 'yyyy-MM-dd')) == 11, 'Noviembre',",
+				"            'Diciembre'),",
+				"          dia_semana = case(dayOfWeek(toDate(fecha, 'yyyy-MM-dd')) == 1, 'Domingo',",
+				"            dayOfWeek(toDate(fecha, 'yyyy-MM-dd')) == 2, 'Lunes',",
+				"            dayOfWeek(toDate(fecha, 'yyyy-MM-dd')) == 3, 'Martes',",
+				"            dayOfWeek(toDate(fecha, 'yyyy-MM-dd')) == 4, 'Miércoles',",
+				"            dayOfWeek(toDate(fecha, 'yyyy-MM-dd')) == 5, 'Jueves',",
+				"            dayOfWeek(toDate(fecha, 'yyyy-MM-dd')) == 6, 'Viernes',",
+				"            'Sábado'),",
+				"          id_tiempo = id_tiempo) ~> TiempoDerivado",
 				"ciudSilver sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -143,7 +190,45 @@
 				"     allowCopyCommand: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> CIUDGOLD"
+				"     errorHandlingOption: 'stopOnFirstError') ~> CIUDGOLD",
+				"TiempoDerivado sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id_tiempo as integer,",
+				"          fecha as date,",
+				"          anno as integer,",
+				"          mes as integer,",
+				"          dia as integer,",
+				"          trimestre as string,",
+				"          nombre_mes as string,",
+				"          dia_semana as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> FechaGOLD",
+				"TPSilver sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id_producto as integer,",
+				"          tipo_producto as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> TPGOLD"
 			]
 		}
 	}
