@@ -45,7 +45,10 @@
 					"name": "idproducto"
 				},
 				{
-					"name": "join1"
+					"name": "idtiempo"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -126,11 +129,22 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> idproducto",
-				"idproducto, TablaTiempo join(DatosSilver@fecha == toString(TablaTiempo@fecha),",
+				"idproducto, TablaTiempo join(DatosSilver@fecha == toString(TablaTiempo@fecha,'yyyy-MM-dd'),",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join1"
+				"     broadcast: 'auto')~> idtiempo",
+				"idtiempo select(mapColumn(",
+				"          id_transaccion,",
+				"          id_cliente,",
+				"          id_producto,",
+				"          id_tiempo,",
+				"          tipo_transaccion = {tipo transacción},",
+				"          monto_transaccion = {monto transacción},",
+				"          numero_cuenta = {número de cuenta}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1"
 			]
 		}
 	}
