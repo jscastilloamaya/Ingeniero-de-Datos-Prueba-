@@ -1,0 +1,26 @@
+{
+	"name": "AzureSynapseAnalyticsTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSynapseAnalytics1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "id_producto",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "tipo_producto",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dim",
+			"table": "Producto"
+		}
+	}
+}
