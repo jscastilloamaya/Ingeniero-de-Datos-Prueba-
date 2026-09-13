@@ -35,7 +35,13 @@
 					"name": "IdTiempo"
 				},
 				{
-					"name": "filter1"
+					"name": "FiltraReportes"
+				},
+				{
+					"name": "idReporte"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -104,7 +110,20 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> IdTiempo",
-				"IdTiempo filter({reporte centrales de riesgo}=='Si') ~> filter1"
+				"IdTiempo filter({reporte centrales de riesgo}=='Sí') ~> FiltraReportes",
+				"FiltraReportes keyGenerate(output(id_reporte as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> idReporte",
+				"idReporte select(mapColumn(",
+				"          {id_reporte } = id_reporte,",
+				"          id_cliente,",
+				"          id_tiempo,",
+				"          reporte_central_riesgo = {reporte centrales de riesgo},",
+				"          {monto_reporte } = {monto reporte de central de riesgo},",
+				"          tiempo_mora = {tiempo en mora del reporte de riesgo}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1"
 			]
 		}
 	}
