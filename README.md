@@ -22,7 +22,7 @@
    - Cargar los datos en un Data Lake
    - Aplicar reglas de limpieza, transformación y control de calidad a los datos
    - Cargar los datos finales en el modelo dimensional.
-   - Asegurar que el proceso sea escalable y eficiente..
+   - Asegurar que el proceso sea escalable y eficiente.
 
 
 # 📌 Parte 3: Explotación y Acceso a los Datos (Práctico - Análisis)
@@ -30,6 +30,17 @@
 ## Instrucciones
 1. **Desarrolla una consulta en el DWH que identifique a los clientes más rentables, basándose en su historial transaccional**
    - Explica cómo se podría utilizar esta información para la democratización de datos en la organización, facilitando su consumo por parte de analistas y otras áreas de negocio.
+
+# 📌 Parte 4: Procesamiento On-Premise con DataStage y Control-M (Python-Ya que no tengo la s licencias)
+
+## Instrucciones
+1. **Tomar un archivo plano (clientes_input.txt) con 7 columnas separadas por | y fechas en formatos mixtos.**
+   - Estandarizar todas las fechas a YYYY-MM-DD.
+   - Cambiar el delimitador de | a , (pipe a coma)
+   - Generar el archivo de salida transformado.
+   - Orquestar el movimiento del archivo transformado del directorio A al directorio B.
+   - Calendarización obligatoria: configurar la ejecución de lunes a viernes a las 08:00 (zona horaria America/Bogota), con manejo de reintentos y alertas ante fallos.
+
 
 
 
