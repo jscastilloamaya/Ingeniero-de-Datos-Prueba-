@@ -35,22 +35,14 @@ En la versión Synapse, el filtro `WHERE t.id_tiempo = 20240228` se aplica sobre
 
 
 ### b) Valor estratégico y operativo
-- **Estratégico**: marketing puede dirigir campañas de retención y cross-sell específicamente
-  al segmento de clientes rentables y sin alertas de riesgo — el de mayor valor esperado y
-  menor probabilidad de pérdida.
-- **Operativo**: el área comercial recibe una lista ya depurada y accionable, sin necesidad de
-  cruzar manualmente reportes de riesgo con transacciones cada vez que se requiere.
-- **Democratización de datos**: publicando esta lógica como una vista (`gold.vw_ClientesRentablesSinRiesgo`)
-  documentada en un catálogo (ej. Microsoft Purview), analistas de marketing o de negocio sin
-  conocimientos de SQL avanzado pueden construir sus propios reportes en Power BI de forma
-  autónoma, sin depender de que el equipo de datos entregue reportes uno por uno.
+- **Estratégico**: marketing puede dirigir campañas de retención y cross-sell específicamente al segmento de clientes rentables y sin alertas de riesgo, con mayor valor esperado y menor probabilidad de pérdida.
+
+- **Operativo**: el área comercial recibe una lista ya depurada y accionable, sin necesidad de cruzar manualmente reportes de riesgo con transacciones cada vez que se requiere.
+- **Democratización de datos**: publicando esta lógica como una vista (`gold.vw_ClientesRentablesSinRiesgo`) documentada en un catálogo, analistas de marketing o de negocio sin conocimientos de SQL avanzado pueden construir sus propios reportes en Power BI de forma autónoma, sin depender de que el equipo de datos entregue reportes uno por uno.
 
 ### c) Seguridad y control de acceso
 - Acceso otorgado únicamente sobre la vista curada, nunca directo a `fact.Transacciones` ni
   `dim.Cliente` (`GRANT SELECT` acotado a la vista).
-- **Dynamic Data Masking** sobre columnas sensibles (`numero_identificacion`, `correo`) si se
-  llegan a exponer en reportes de consumo.
-- **Row-Level Security** para limitar la vista por región/ciudad si el consumo se segmenta por
-  zona geográfica.
-- **Auditoría** de accesos a la vista vía Synapse Audit Logs / SQL Server Audit, relevante por
-  regulación de datos financieros.
+- **Dynamic Data Masking** sobre columnas sensibles (`numero_identificacion`, `correo`) si se llegan a exponer en reportes de consumo.
+- **Row-Level Security** para limitar la vista por región/ciudad si el consumo se segmenta por zona geográfica.
+- **Auditoría** de accesos a la vista vía Synapse Audit Logs / SQL Server Audit, relevante por regulación de datos financieros.

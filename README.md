@@ -21,7 +21,7 @@
 ## Estructura del repositorio
 
 ```
-parte1-modelado/
+parte1/
 ├── README.md
 ├── diagrama.png
 ├── arquitectura.png
@@ -47,6 +47,7 @@ parte1-modelado/
 ## Estructura del repositorio
 
 ```
+parte2/
 ├── dataflow/              
 ├── dataset/              
 ├── linkedService/         
@@ -63,6 +64,16 @@ parte1-modelado/
 ## Instrucciones
 1. **Desarrolla una consulta en el DWH que identifique a los clientes más rentables, basándose en su historial transaccional**
    - Explica cómo se podría utilizar esta información para la democratización de datos en la organización, facilitando su consumo por parte de analistas y otras áreas de negocio.
+
+## Estructura del repositorio
+
+```
+parte3/
+├── README.md
+├── Consulta.png
+├── SQLServerQuery.sql
+└── SQLQuerySynapse.sql
+```
 
 # 📌 Parte 4: Procesamiento On-Premise con DataStage y Control-M (Python-Ya que no tengo la s licencias)
 
