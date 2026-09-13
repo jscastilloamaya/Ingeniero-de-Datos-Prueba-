@@ -1,11 +1,5 @@
 # Prueba Técnica — Ingeniería de Datos (Banco de Bogota)
 
-
-
-
-
-### Parte 1: Modelado y Arquitectura de Datos (Teórico - Diseño) Instrucciones:
-
 # 📌 Parte 1: Modelado y Arquitectura de Datos (Teórico - Diseño)
 
 ## Instrucciones
@@ -32,6 +26,13 @@ c. Consideraciones de calidad, gobierno y seguridad
 ## Respuesta
 ![Diagrama del modelo](diagrama.png)
 **Figura 1.** Diagrama del modelo
+
+parte1-modelado/
+├── README.md
+├── diagrama.png
+├── arquitectura.png
+├── 01_modelo_sqlserver.sql
+└── 02_modelo_synapse.sql
 
 
 ### Justificación del modelo dimensional
@@ -60,3 +61,22 @@ La razón es que el caso de negocio integra dos procesos con grano distinto, tra
 **Trazabilidad y auditoría**
 - Columnas de control en cada tabla de hechos: fecha_carga y batch_id (identificador único por ejecución del pipeline, que agrupa todas las filas cargadas en esa corrida —permite reprocesar o hacer rollback de un batch completo sin tocar el resto de la tabla).
 - Historización con SCD tipo 2 en dim.Cliente: conserva el estado exacto del cliente en cada punto del tiempo, no solo el estado actual.
+
+### Calidad y gobernanza de datos
+Como se ilustra en la Figura 2, la calidad se aplica de forma incremental en cada capa:
+completitud y unicidad en Silver, e integridad referencial en Gold antes de insertar en las
+tablas de hechos (recordando que Synapse no aplica FOREIGN KEY(), por lo que esta validación
+es responsabilidad del pipeline, no del motor de base de datos).
+
+### Calidad y Gobernanza de Datos
+
+La calidad de datos se aplica de forma incremental a lo largo de las capas del Data Lakehouse:
+- **Capa Silver:** Validaciones de completitud (chequeo de `NULL`s en campos clave), unicidad y rangos válidos.
+- **Capa Gold:** Validación de integridad referencial previo a la inserción en el *Dedicated SQL Pool* (considerando que motores MPP como Synapse no fuerzan restricciones físicas de `FOREIGN KEY`, por lo que este control se delega a la lógica del pipeline de integración).
+
+
+| Dominio | Implementación en Azure | Equivalente Homólogo en GCP |
+| :--- | :--- | :--- |
+| **Catálogo de Datos y Lineage** | **Microsoft Purview:** Escaneo automático de datasets, clasificación de columnas con PII (`numero_identificacion`, `telefono`, `correo`) y trazabilidad (*lineage*) desde el archivo en Data Lake Gen2 hasta la capa Gold. | **Dataplex (Data Catalog):** Descubrimiento, catalogación automática y rastreo de linaje extremo a extremo sobre tablas en BigQuery y objetos en Cloud Storage. |
+| **Enmascaramiento y Control de Acceso** | **Dynamic Data Masking (DDM):** Enmascaramiento dinámico en Synapse para ocultar PII a usuarios no autorizados, complementado con políticas de seguridad a nivel de fila y columna (*Row/Column Level Security*). | **BigQuery Policy Tags & Dynamic Data Masking:** Etiquetas de política integradas con IAM para restringir o enmascarar datos sensibles mediante hashing o enmascaramiento parcial. |
+| **Cifrado de Datos** | **Cifrado en reposo y tránsito:** Utilización de Azure Storage Encryption, Transparent Data Encryption (TDE) en Synapse y protocolos TLS en tránsito. | **Cloud KMS:** Cifrado automático por defecto en reposo y tránsito, con soporte para llaves administradas por el cliente (*CMEK*). |

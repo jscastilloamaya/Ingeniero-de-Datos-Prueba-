@@ -12,6 +12,11 @@
 1. **Dado el siguiente caso de negocio:**
 
    *Una entidad bancaria quiere analizar el comportamiento de sus clientes en productos financieros (cuentas de ahorro, tarjetas de crédito y créditos). Para ello, se requiere integrar datos de múltiples fuentes (transacciones, datos de clientes y riesgo crediticio) en un Data Warehouse implementado en GCP.*
+   - Diseña un modelo dimensional (modelo estrella o copo de nieve) para el caso presentado.
+   - Justifica tu elección del modelo, destacando sus ventajas para el análisis en entornos de BI y reporting.
+   - Propón una estrategia de particionamiento y clustering que permita optimizar las consultas en BigQuery.
+   - Describe cómo garantizarías la calidad y la gobernanza de los datos a lo largo del pipeline.
+   - Explica qué mecanismos implementarías para asegurar la trazabilidad y auditoría de los datos procesados.
 
 # 📌 Parte 2: Construcción de Pipeline ETL/ELT (Práctico - Implementación)
 
