@@ -24,48 +24,34 @@
  -	Entrada: ruta_origen, nombre_archivo, delimitador_entrada, formatos_fecha_detectados.
  -	Proceso: formato_fecha_objetivo (YYYY-MM-DD), delimitador_salida (,), políticas de reintento, umbral de tamaño.
  -	Salida: ruta_destino, patrón_nombre_salida (con fecha/hora), ruta_logs, ruta_evidencias.
-##	Salidas de ejecución (obligatorias):
+###	Salidas de ejecución (obligatorias):
  -	Transformación (DataStage): archivo resultante + log de etapa (stats, filas leídas/escritas, rechazadas).
  -	Ejecución (Control-M): job con calendario L-V 08:00, historial de run, código de retorno, y evidencias del movimiento (origen/destino, checksums opcionales).
 
 
 
 ## Respuesta
-![Captura del log](LogIntento.png)
-**Figura 1.** Captura del log
 
-
-**Script**: `EmuladorDataStageControl-M.py` — organizado en celdas `# %%` para poder ejecutarse
-y explicarse paso a paso, dividido conceptualmente en dos bloques:
+**Script**: `EmuladorDataStageControl-M.py`, organizado en celdas `# %%` para poder ejecutarse y explicarse paso a paso, dividido conceptualmente en dos bloques:
 
 ### Bloque DataStage (celdas 1-6)
 - Lee `clientes_input.txt` desde `directorioA`.
-- `normalizar_fecha()` detecta el formato de cada fecha por la posición del año (4 dígitos) y
-  la convierte a `YYYY-MM-DD`, cubriendo los 4 formatos mixtos presentes en el archivo
-  (`YYYY-MM-DD`, `YYYY/MM/DD`, `DD-MM-YYYY`, `DD/MM/YYYY`).
+- `normalizar_fecha()` detecta el formato de cada fecha por la posición del año (4 dígitos) y la convierte a `YYYY-MM-DD`, cubriendo los 4 formatos mixtos presentes en el archivo(`YYYY-MM-DD`, `YYYY/MM/DD`, `DD-MM-YYYY`, `DD/MM/YYYY`).
 - Cambia el delimitador de `|` a `,` y genera `clientes_transformado.txt` en `directorioA`.
-- **Limitación conocida**: las estadísticas de filas leídas/escritas/rechazadas se muestran
-  por consola, pero no se persisten en un archivo de log — a diferencia del bloque de
-  Control-M, que sí guarda su historial en disco.
+
 
 ### Bloque Control-M (celdas 7-11)
 - `job_mover_archivo()` valida existencia y tamaño del archivo origen, mueve el archivo a
   `directorioB`, y verifica que el tamaño en destino coincida con el original.
 - Reintenta hasta 3 veces con 5 segundos de espera entre intentos ante cualquier fallo.
-- `enviar_alerta()` registra un mensaje de alerta en el log si se agotan los reintentos
-  (simulando el mecanismo de notificación de Control-M; en producción sería correo/webhook).
+- `enviar_alerta()` registra un mensaje de alerta en el log si se agotan los reintentos.
 - Programado con `APScheduler` (`CronTrigger`) para ejecutarse **lunes a viernes 08:00,
-  zona horaria America/Bogota** — configuración comentada en el script para no bloquear el
+  zona horaria America/Bogota**, configuración comentada en el script para no bloquear el
   proceso durante las pruebas manuales.
-- **Idempotencia**: si el job se re-ejecuta sin que haya un archivo nuevo en `directorioA`
-  (porque ya fue movido en una corrida anterior), falla de forma controlada con
-  `FileNotFoundError` y genera una alerta — no duplica ni sobrescribe nada en `directorioB`.
-
-![Captura del log de ejecución de Control-M](LogIntento.png)
-**Figura 1.** Log de ejecución mostrando un job exitoso y el inicio del scheduler.
+- **Idempotencia**: si el job se re-ejecuta sin que haya un archivo nuevo en `directorioA` (porque ya fue movido en una corrida anterior), falla de forma controlada con `FileNotFoundError` y genera una alerta, no duplica ni sobrescribe nada en `directorioB`.
 
 ### Evidencia de ejecución
-- `control_m_log.txt` — historial de runs con timestamp, resultado y bytes movidos.
+- `control_m_log.txt`, historial de runs con timestamp, resultado y bytes movidos.
 - `directorioA/clientes_input.txt` → `directorioB/clientes_transformado.txt` (delimitador y
   fechas transformados, archivo movido físicamente entre carpetas).
 
@@ -77,9 +63,3 @@ y explicarse paso a paso, dividido conceptualmente en dos bloques:
 transformación sin rechazos, generación del archivo, y movimiento exitoso por Control-M
 en el primer intento.
 
-### Evidencia de ejecución
-- `control_m_log.txt` — historial de runs con timestamp, resultado y bytes movidos.
-- `ejecucion.png` (Figura 2) — evidencia visual del log de etapa de DataStage (filas leídas,
-  transformadas, rechazadas), capturado en consola ya que no se persiste en archivo separado.
-- `directorioA/clientes_input.txt` → `directorioB/clientes_transformado.txt` (delimitador y
-  fechas transformados, archivo movido físicamente entre carpetas).
