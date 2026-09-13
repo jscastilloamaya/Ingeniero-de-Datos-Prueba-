@@ -36,6 +36,12 @@
 				},
 				{
 					"name": "ColumnasNecesarias"
+				},
+				{
+					"name": "Reportes"
+				},
+				{
+					"name": "surrogateKey1"
 				}
 			],
 			"scriptLines": [
@@ -112,7 +118,11 @@
 				"          {tiempo_mora } = {tiempo en mora del reporte de riesgo}",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> ColumnasNecesarias"
+				"     skipDuplicateMapOutputs: true) ~> ColumnasNecesarias",
+				"ColumnasNecesarias filter(reporte_central_riesgo=='Sí') ~> Reportes",
+				"Reportes keyGenerate(output(id_reporte as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1"
 			]
 		}
 	}
