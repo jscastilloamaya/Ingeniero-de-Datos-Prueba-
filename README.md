@@ -86,5 +86,16 @@ parte3/
    - Calendarización obligatoria: configurar la ejecución de lunes a viernes a las 08:00 (zona horaria America/Bogota), con manejo de reintentos y alertas ante fallos.
 
 
+## Estructura del repositorio
+```
+parte4/
+├── directorioA/
+├── directorioB/
+├── EmuladorDataStageControl-M.py
+├── LogIntento.png
+├── README.md
+├── control_m_log.txt
+└── ejecucion.png
+```
 
 

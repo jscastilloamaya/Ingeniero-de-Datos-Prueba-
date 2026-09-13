@@ -3,7 +3,7 @@
 # 📌 Procesamiento On-Premise con DataStage y Control-M  (Emulado con Python)
 
 > 💡 **Nota de Contexto / Aclaración Técnica:**  
-> Debido a la falta de licencias y acceso a un entorno corporativo con **IBM InfoSphere DataStage** y **BMC Control-M**, los componentes de ETL y orquestación definidos en el enunciado han sido **emulados mediante Python**. 
+> Debido a la falta de licencias y acceso a un entorno corporativo con **IBM DataStage** y **Control-M**, los componentes de ETL y orquestación definidos en el enunciado han sido **emulados mediante Python**. 
 > 
 > El desarrollo implementa de forma exacta la lógica solicitada: la lectura, parsing, normalización de formatos mixtos de fecha y conversión de delimitadores simulan las etapas de un *job* de DataStage, mientras que las rutinas de validación de archivos, reintentos, logging, manejo de alertas y calendarización (*cron*) replican el comportamiento operativo de las tareas orquestadas en Control-M.
 
