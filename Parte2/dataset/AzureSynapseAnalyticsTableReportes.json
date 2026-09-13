@@ -1,0 +1,56 @@
+{
+	"name": "AzureSynapseAnalyticsTableReportes",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSynapseAnalytics1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "id_reporte",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "id_cliente",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "id_tiempo",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "reporte_central_riesgo",
+				"type": "varchar"
+			},
+			{
+				"name": "monto_reporte",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "tiempo_mora",
+				"type": "varchar"
+			},
+			{
+				"name": "fecha_carga",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "batch_id",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "fact",
+			"table": "ReporteRiesgo"
+		}
+	}
+}
