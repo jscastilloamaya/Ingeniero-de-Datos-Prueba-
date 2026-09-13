@@ -18,6 +18,21 @@
    - Describe cómo garantizarías la calidad y la gobernanza de los datos a lo largo del pipeline.
    - Explica qué mecanismos implementarías para asegurar la trazabilidad y auditoría de los datos procesados.
 
+## Estructura del repositorio
+
+```
+parte1-modelado/
+├── README.md
+├── diagrama.png
+├── arquitectura.png
+├── P1Arquitectura.drawio
+├── 01_sqlserver_crear_basedatos.sql
+├── 02_sqlserver_crear_esquemas.sql
+├── 03_sqlserver_crear_tablas.sql
+└── 04_synapse_modelo_completo.sql
+```
+
+
 # 📌 Parte 2: Construcción de Pipeline ETL/ELT (Práctico - Implementación)
 
 ## Instrucciones

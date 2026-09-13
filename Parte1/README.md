@@ -77,6 +77,6 @@ La calidad de datos se aplica de forma incremental a lo largo de las capas del D
 
 | Dominio | Implementación en Azure | Equivalente Homólogo en GCP |
 | :--- | :--- | :--- |
-| **Catálogo de Datos y Lineage** | **Microsoft Purview:** Escaneo automático de datasets, clasificación de columnas con PII (`numero_identificacion`, `telefono`, `correo`) y trazabilidad (*lineage*) desde el archivo en Data Lake Gen2 hasta la capa Gold. | **Dataplex (Data Catalog). |
-| **Enmascaramiento y Control de Acceso** | **Dynamic Data Masking (DDM):** Enmascaramiento dinámico en Synapse para ocultar PII a usuarios no autorizados, complementado con políticas de seguridad a nivel de fila y columna (*Row/Column Level Security*). | **BigQuery Policy Tags & Dynamic Data Masking. |
+| **Catálogo de Datos y Lineage** | **Microsoft Purview:** Escaneo automático de datasets, clasificación de columnas con PII (`numero_identificacion`, `telefono`, `correo`) y trazabilidad (*lineage*) desde el archivo en Data Lake Gen2 hasta la capa Gold. | **Dataplex (Data Catalog).** |
+| **Enmascaramiento y Control de Acceso** | **Dynamic Data Masking (DDM):** Enmascaramiento dinámico en Synapse para ocultar PII a usuarios no autorizados, complementado con políticas de seguridad a nivel de fila y columna (*Row/Column Level Security*). | **BigQuery Policy Tags & Dynamic Data Masking.** |
 | **Cifrado de Datos** | **Cifrado en reposo y tránsito:** Utilización de Azure Storage Encryption, Transparent Data Encryption (TDE) en Synapse y protocolos TLS en tránsito. | **Cloud KMS**|
