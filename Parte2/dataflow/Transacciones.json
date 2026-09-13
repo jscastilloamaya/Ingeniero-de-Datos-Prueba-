@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "Transacciones",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -9,14 +9,21 @@
 						"referenceName": "fechasok",
 						"type": "DatasetReference"
 					},
-					"name": "DataSilver"
+					"name": "DatosSilver"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTableProduc",
+						"type": "DatasetReference"
+					},
+					"name": "Tablaproducto"
 				},
 				{
 					"dataset": {
 						"referenceName": "AzureSynapseAnalyticsTableCliente",
 						"type": "DatasetReference"
 					},
-					"name": "TablaClientes"
+					"name": "Tablacliente"
 				},
 				{
 					"dataset": {
@@ -26,13 +33,30 @@
 					"name": "TablaTiempo"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable1",
+						"type": "DatasetReference"
+					},
+					"name": "TransacGOLD"
+				}
+			],
 			"transformations": [
 				{
-					"name": "IdCliente"
+					"name": "idtransac"
 				},
 				{
-					"name": "IdTiempo"
+					"name": "idcliente"
+				},
+				{
+					"name": "idproducto"
+				},
+				{
+					"name": "idtiempo"
+				},
+				{
+					"name": "ColumsNecesarias"
 				}
 			],
 			"scriptLines": [
@@ -59,7 +83,16 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> DataSilver",
+				"     ignoreNoFilesFound: false) ~> DatosSilver",
+				"source(output(",
+				"          id_producto as integer,",
+				"          tipo_producto as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> Tablaproducto",
 				"source(output(",
 				"          id_cliente as integer,",
 				"          tipo_identificacion as string,",
@@ -75,7 +108,7 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table',",
-				"     staged: true) ~> TablaClientes",
+				"     staged: true) ~> Tablacliente",
 				"source(output(",
 				"          id_tiempo as integer,",
 				"          fecha as date,",
@@ -91,16 +124,58 @@
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table',",
 				"     staged: true) ~> TablaTiempo",
-				"DataSilver, TablaClientes join({tipo de identificación} == tipo_identificacion,",
+				"DatosSilver keyGenerate(output(id_transaccion as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> idtransac",
+				"idtransac, Tablacliente join({número de identificación} == numero_identificacion,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> IdCliente",
-				"IdCliente, TablaTiempo join(DataSilver@fecha == toString(TablaTiempo@fecha,'yyyy-MM-dd'),",
+				"     broadcast: 'auto')~> idcliente",
+				"idcliente, Tablaproducto join({tipo de producto} == tipo_producto,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> IdTiempo"
+				"     broadcast: 'auto')~> idproducto",
+				"idproducto, TablaTiempo join(DatosSilver@fecha == toString(TablaTiempo@fecha,'yyyy-MM-dd'),",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> idtiempo",
+				"idtiempo select(mapColumn(",
+				"          id_transaccion,",
+				"          id_cliente,",
+				"          id_producto,",
+				"          id_tiempo,",
+				"          tipo_transaccion = {tipo transacción},",
+				"          monto_transaccion = {monto transacción},",
+				"          numero_cuenta = {número de cuenta}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> ColumsNecesarias",
+				"ColumsNecesarias sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id_transaccion as long,",
+				"          id_cliente as integer,",
+				"          id_producto as integer,",
+				"          id_tiempo as integer,",
+				"          tipo_transaccion as string,",
+				"          monto_transaccion as decimal(18,2),",
+				"          numero_cuenta as long,",
+				"          fecha_carga as timestamp,",
+				"          batch_id as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> TransacGOLD"
 			]
 		}
 	}

@@ -25,7 +25,7 @@
 						"referenceName": "AzureSynapseAnalyticsTableCliente",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "ClienteGold"
 				}
 			],
 			"transformations": [
@@ -45,10 +45,10 @@
 					"name": "IDCliente"
 				},
 				{
-					"name": "join1"
+					"name": "agregarIDCiudad"
 				},
 				{
-					"name": "select1"
+					"name": "filasTabla"
 				}
 			],
 			"scriptLines": [
@@ -116,8 +116,8 @@
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join1",
-				"join1 select(mapColumn(",
+				"     broadcast: 'auto')~> agregarIDCiudad",
+				"agregarIDCiudad select(mapColumn(",
 				"          id_cliente,",
 				"          tipo_identificacion = {tipo de identificación},",
 				"          numero_identificacion = FilasNecesarias@{número de identificación},",
@@ -129,8 +129,8 @@
 				"          id_ciudad",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: true) ~> filasTabla",
+				"filasTabla sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          id_cliente as integer,",
@@ -152,7 +152,7 @@
 				"     allowCopyCommand: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     errorHandlingOption: 'stopOnFirstError') ~> ClienteGold"
 			]
 		}
 	}
