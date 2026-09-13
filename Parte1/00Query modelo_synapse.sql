@@ -10,7 +10,6 @@ GO
 CREATE TABLE dim.Ciudad (
     id_ciudad    INT NOT NULL,
     ciudad       VARCHAR(100) NOT NULL,
-    departamento VARCHAR(100) NULL,
     CONSTRAINT PK_dim_Ciudad PRIMARY KEY NONCLUSTERED (id_ciudad) NOT ENFORCED
 )
 WITH (
@@ -22,7 +21,6 @@ GO
 CREATE TABLE dim.Producto (
     id_producto   INT NOT NULL,
     tipo_producto VARCHAR(50) NOT NULL,
-    numero_cuenta BIGINT NULL,
     CONSTRAINT PK_dim_Producto PRIMARY KEY NONCLUSTERED (id_producto) NOT ENFORCED
 )
 WITH (
@@ -60,9 +58,6 @@ CREATE TABLE dim.Cliente (
     telefono              VARCHAR(20) NULL,
     correo                VARCHAR(150) NULL,
     id_ciudad             INT NULL,
-    fecha_inicio          DATE NOT NULL,
-    fecha_fin             DATE NULL,
-    vigente               BIT NOT NULL DEFAULT (1),
     CONSTRAINT PK_dim_Cliente PRIMARY KEY NONCLUSTERED (id_cliente) NOT ENFORCED
 )
 WITH (
@@ -80,17 +75,18 @@ CREATE TABLE fact.Transacciones (
     id_tiempo         INT NOT NULL,
     tipo_transaccion  VARCHAR(50) NOT NULL,
     monto_transaccion DECIMAL(18,2) NOT NULL,
-    fecha_carga       DATETIME NOT NULL DEFAULT (GETDATE()),
+    numero_cuenta     BIGINT NOT NULL,
+    fecha_carga       DATETIME  NULL,
     batch_id          VARCHAR(50) NULL,
-    CONSTRAINT PK_fact_Transacciones PRIMARY KEY NONCLUSTERED (id_transaccion) NOT ENFORCED
+    CONSTRAINT PK_fact_Transacciones PRIMARY KEY NONCLUSTERED (id_transaccion, id_tiempo) NOT ENFORCED
 )
 WITH (
     DISTRIBUTION = HASH(id_cliente),
     CLUSTERED COLUMNSTORE INDEX ORDER (id_cliente),
     PARTITION (
         id_tiempo RANGE RIGHT FOR VALUES (
-            20260101, 20260201, 20260301, 20260401, 20260501, 20260601,
-            20260701, 20260801, 20260901, 20261001, 20261101, 20261201
+            20240101, 20240201, 20240301, 20240401, 20240501, 20240601,
+            20240701, 20240801, 20240901, 20241001, 20241101, 20241201
         )
     )
 );
@@ -103,17 +99,17 @@ CREATE TABLE fact.ReporteRiesgo (
     reporte_central_riesgo  VARCHAR(100) NULL,
     monto_reporte           DECIMAL(18,2) NULL,
     tiempo_mora             VARCHAR(50) NULL,
-    fecha_carga             DATETIME NOT NULL DEFAULT (GETDATE()),
+    fecha_carga             DATETIME NULL,
     batch_id                VARCHAR(50) NULL,
-    CONSTRAINT PK_fact_ReporteRiesgo PRIMARY KEY NONCLUSTERED (id_reporte) NOT ENFORCED
+    CONSTRAINT PK_fact_ReporteRiesgo PRIMARY KEY NONCLUSTERED (id_reporte, id_tiempo) NOT ENFORCED
 )
 WITH (
     DISTRIBUTION = HASH(id_cliente),
     CLUSTERED COLUMNSTORE INDEX ORDER (id_cliente),
     PARTITION (
         id_tiempo RANGE RIGHT FOR VALUES (
-            20260101, 20260201, 20260301, 20260401, 20260501, 20260601,
-            20260701, 20260801, 20260901, 20261001, 20261101, 20261201
+            20240101, 20240201, 20240301, 20240401, 20240501, 20240601,
+            20240701, 20240801, 20240901, 20241001, 20241101, 20241201
         )
     )
 );

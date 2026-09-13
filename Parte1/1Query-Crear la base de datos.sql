@@ -5,7 +5,7 @@ CREATE DATABASE bancoBogotaColombia
 ON
 (
     NAME = bancoBogotaColombia_dat,
-    FILENAME = 'C:\Users\jcast\Desktop\Pruebas Tecnicas\Banco de Bogota\Ingeniero de datos\Parte 1\bancoBogotaColombia_dat.mdf',
+    FILENAME = 'C:\Master en SQL Server\bancoBogotaColombia_dat.mdf',
     SIZE = 10MB,
     MAXSIZE = 100MB,
     FILEGROWTH = 10MB
@@ -13,7 +13,7 @@ ON
 LOG ON
 (
     NAME = bancoBogotaColombia_log,
-    FILENAME = 'C:\Users\jcast\Desktop\Pruebas Tecnicas\Banco de Bogota\Ingeniero de datos\Parte 1\bancoBogotaColombia_log.ldf',
+    FILENAME = 'C:\Master en SQL Server\bancoBogotaColombia_log.ldf',
     SIZE = 10MB,
     MAXSIZE = 100MB,
     FILEGROWTH = 10MB
