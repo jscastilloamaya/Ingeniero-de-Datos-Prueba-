@@ -123,7 +123,7 @@
 				"          id_tiempo,",
 				"          reporte_central_riesgo = {reporte centrales de riesgo},",
 				"          monto_reporte = {monto reporte de central de riesgo},",
-				"          {tiempo_mora } = {tiempo en mora del reporte de riesgo}",
+				"          tiempo_mora = {tiempo en mora del reporte de riesgo}",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> ColumnasNecesarias",
