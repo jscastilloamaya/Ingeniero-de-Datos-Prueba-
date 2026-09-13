@@ -57,6 +57,6 @@ como mejora pendiente antes de un despliegue en producción.
 Las tablas de hechos se cargan sobre el modelo ya particionado y con Ordered Clustered
 Columnstore Index definido en la Parte 1 (ver `parte1-modelado/04_synapse_modelo_completo.sql`).
 
-![Figura 2. Synapse ](SynapsePruebaCarga.png)
+![Figura 2. Synapse ](goldsynapse.png)
 
 **Figura 2.** Synapse (Data WareHouse) Despleagado (goldbogotasyn)
