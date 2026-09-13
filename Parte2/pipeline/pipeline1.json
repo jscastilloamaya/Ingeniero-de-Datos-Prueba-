@@ -123,7 +123,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "Transacciones",
+						"referenceName": "Transac",
 						"type": "DataFlowReference"
 					},
 					"staging": {
@@ -162,7 +162,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "Reportes",
+						"referenceName": "dataflow1",
 						"type": "DataFlowReference"
 					},
 					"staging": {
