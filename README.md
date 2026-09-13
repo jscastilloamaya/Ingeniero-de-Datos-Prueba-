@@ -44,7 +44,20 @@ parte1-modelado/
    - Cargar los datos finales en el modelo dimensional.
    - Asegurar que el proceso sea escalable y eficiente.
 
+## Estructura del repositorio
 
+```
+├── dataflow/              
+├── dataset/              
+├── linkedService/         
+├── pipeline/             
+├── CargaCompleta.png
+├── SynapsePruebaCarga.png
+├── ETL.py                 # Intento no desplegado (se prueba offline, pero se puede cargar a servicios de databricks)
+├── datos_transacciones.csv
+├── publish_config.json
+└── README.md
+```
 # 📌 Parte 3: Explotación y Acceso a los Datos (Práctico - Análisis)
 
 ## Instrucciones
