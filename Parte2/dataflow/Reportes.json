@@ -43,13 +43,13 @@
 					"name": "IdTiempo"
 				},
 				{
-					"name": "FiltraReportes"
-				},
-				{
 					"name": "idReporte"
 				},
 				{
 					"name": "ColumnasNecesarias"
+				},
+				{
+					"name": "filter1"
 				}
 			],
 			"scriptLines": [
@@ -108,7 +108,7 @@
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table',",
 				"     staged: true) ~> TablaTiempo",
-				"DataSilver, TablaClientes join({tipo de identificación} == tipo_identificacion,",
+				"filter1, TablaClientes join({tipo de identificación} == tipo_identificacion,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
@@ -118,8 +118,7 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> IdTiempo",
-				"IdTiempo filter({reporte centrales de riesgo}=='Sí') ~> FiltraReportes",
-				"FiltraReportes keyGenerate(output(idReps as long),",
+				"IdTiempo keyGenerate(output(idReps as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> idReporte",
 				"idReporte select(mapColumn(",
@@ -132,6 +131,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> ColumnasNecesarias",
+				"DataSilver filter({reporte centrales de riesgo}=='Sí') ~> filter1",
 				"ColumnasNecesarias sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
