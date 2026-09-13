@@ -27,13 +27,6 @@ c. Consideraciones de calidad, gobierno y seguridad
 ![Diagrama del modelo](diagrama.png)
 **Figura 1.** Diagrama del modelo
 
-parte1-modelado/
-├── README.md
-├── diagrama.png
-├── arquitectura.png
-├── 01_modelo_sqlserver.sql
-└── 02_modelo_synapse.sql
-
 
 ### Justificación del modelo dimensional
 Elegí una constelación de hechos (galaxy schema): dos tablas de hechos (fact.Transacciones y fact.ReporteRiesgo) que comparten dimensiones conformadas (dim.Cliente, dim.Tiempo), con dim.Ciudad normalizada en copo de nieve respecto a dim.Cliente.
