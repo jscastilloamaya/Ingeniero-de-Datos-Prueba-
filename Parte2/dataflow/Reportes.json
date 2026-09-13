@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "Reportes",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -26,7 +26,15 @@
 					"name": "TablaTiempo"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTableReportes",
+						"type": "DatasetReference"
+					},
+					"name": "GOLDTRANSACCIONES"
+				}
+			],
 			"transformations": [
 				{
 					"name": "IdCliente"
@@ -41,7 +49,7 @@
 					"name": "Reportes"
 				},
 				{
-					"name": "surrogateKey1"
+					"name": "IDReporte"
 				}
 			],
 			"scriptLines": [
@@ -122,7 +130,29 @@
 				"ColumnasNecesarias filter(reporte_central_riesgo=='Sí') ~> Reportes",
 				"Reportes keyGenerate(output(id_reporte as long),",
 				"     startAt: 1L,",
-				"     stepValue: 1L) ~> surrogateKey1"
+				"     stepValue: 1L) ~> IDReporte",
+				"IDReporte sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id_reporte as long,",
+				"          id_cliente as integer,",
+				"          id_tiempo as integer,",
+				"          reporte_central_riesgo as string,",
+				"          monto_reporte as decimal(18,2),",
+				"          tiempo_mora as string,",
+				"          fecha_carga as timestamp,",
+				"          batch_id as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> GOLDTRANSACCIONES"
 			]
 		}
 	}
