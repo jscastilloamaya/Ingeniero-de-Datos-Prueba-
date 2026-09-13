@@ -42,7 +42,7 @@ En la versión Synapse, el filtro `WHERE t.id_tiempo = 20240228` se aplica sobre
 
 ### c) Seguridad y control de acceso
 - Acceso otorgado únicamente sobre la vista curada, nunca directo a `fact.Transacciones` ni
-  `dim.Cliente` (`GRANT SELECT` acotado a la vista).
+  `dim.Cliente`.
 - **Dynamic Data Masking** sobre columnas sensibles (`numero_identificacion`, `correo`) si se llegan a exponer en reportes de consumo.
 - **Row-Level Security** para limitar la vista por región/ciudad si el consumo se segmenta por zona geográfica.
 - **Auditoría** de accesos a la vista vía Synapse Audit Logs / SQL Server Audit, relevante por regulación de datos financieros.

@@ -1,0 +1,5 @@
+[2026-09-13 18:22:44] Iniciando job: mover archivo de 'c:\users\jcast\desktop\pruebas tecnicas\banco de bogota\ingeniero de datos\parte4\directorioA\clientes_transformado.txt' a 'c:\users\jcast\desktop\pruebas tecnicas\banco de bogota\ingeniero de datos\parte4\directorioB\clientes_transformado.txt'
+[2026-09-13 18:22:44] Job exitoso en el intento 1. Archivo movido correctamente (460 bytes).
+[2026-09-13 18:23:08] Scheduler iniciado. Próxima ejecución programada L-V 08:00 (America/Bogota).
+[2026-09-13 18:37:18] Iniciando job: mover archivo de 'c:\users\jcast\desktop\pruebas tecnicas\banco de bogota\ingeniero de datos\parte4\directorioA\clientes_transformado.txt' a 'c:\users\jcast\desktop\pruebas tecnicas\banco de bogota\ingeniero de datos\parte4\directorioB\clientes_transformado.txt'
+[2026-09-13 18:37:18] Job exitoso en el intento 1. Archivo movido correctamente (460 bytes).

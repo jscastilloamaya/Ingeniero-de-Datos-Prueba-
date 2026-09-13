@@ -75,7 +75,7 @@ parte3/
 └── SQLQuerySynapse.sql
 ```
 
-# 📌 Parte 4: Procesamiento On-Premise con DataStage y Control-M (Python-Ya que no tengo la s licencias)
+# 📌 Parte 4: Procesamiento On-Premise con DataStage y Control-M (Python-Ya que no tengo las licencias)
 
 ## Instrucciones
 1. **Tomar un archivo plano (clientes_input.txt) con 7 columnas separadas por | y fechas en formatos mixtos.**

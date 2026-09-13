@@ -1,0 +1,8 @@
+ID,Nombre,Apellido,FechaNacimiento,FechaRegistro,Ciudad,Saldo
+1,Ana,García,1985-03-15,2023-02-01,Bogotá,250000
+2,Luis,Martínez,1990-04-15,2023-03-05,Medellín,1200000
+3,María,López,1992-07-21,2023-05-10,Cali,540000
+4,Carlos,Pérez,1980-12-01,2023-06-10,Barranquilla,750000
+5,Sofía,Rodríguez,1995-08-21,2023-07-15,Cartagena,300000
+6,Jorge,Hernández,1978-11-30,2023-08-01,Manizales,980000
+7,Lucía,Fernández,1999-01-25,2023-09-05,Pereira,150000
