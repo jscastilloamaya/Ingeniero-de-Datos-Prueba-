@@ -26,20 +26,13 @@ Se desarrollaron dos versiones de la consulta: una identifica a los clientes má
 ![Salida de la consulta con y sin cruzar con Reportes de Riesgo](Consulta.png)
 **Figura 1.** Salida de la consulta con y sin cruzar con Reportes de Riesgo
 
-Como se observa en la Figura 1, el cruce contra riesgo **sí cambia el resultado de forma
-material**: clientes como el 111, 56, 302, 777, 311, 12 y 496 desaparecen del top 10 al tener
-reportes de central de riesgo asociados, siendo reemplazados por otros clientes igualmente
-rentables pero sin esa alerta — confirmando el valor real de tener un modelo en constelación
-que permite este tipo de cruce entre procesos de negocio distintos.
+Como se observa en la Figura 1, el cruce contra riesgo sí cambia el resultado de forma
+material, clientes como el 111, 56, 302, 777, 311, 12 y 496 desaparecen del top 10 al tener reportes de central de riesgo asociados, siendo reemplazados por otros clientes igualmente rentables pero sin esa alerta, lo que confirma el valor real de tener un modelo en constelación que permite este tipo de cruce entre procesos de negocio distintos.
 
 ### a) Consulta optimizada con particionamiento y clustering
-En la versión Synapse, el filtro `WHERE t.id_tiempo = 20240228` se aplica sobre la columna de
-partición en ambas tablas de hechos (`fact.Transacciones` y `fact.ReporteRiesgo`), permitiendo
-poda de partición. El `JOIN` y `GROUP BY` por `id_cliente` se benefician del
-`CLUSTERED COLUMNSTORE INDEX ORDER (id_cliente)` definido en la Parte 1. Nota: con el dataset
-de prueba (un solo día de datos), la poda de partición no se puede demostrar empíricamente en
-rendimiento, ya que solo existe una partición con datos — el diseño está pensado para el
-volumen real de producción, donde sí generaría impacto medible.
+En la versión Synapse, el filtro `WHERE t.id_tiempo = 20240228` se aplica sobre la columna de partición en ambas tablas de hechos (`fact.Transacciones` y `fact.ReporteRiesgo`), permitiendo poda de partición. El `JOIN` y `GROUP BY` por `id_cliente` se benefician del
+`CLUSTERED COLUMNSTORE INDEX ORDER (id_cliente)` definido en la Parte 1. Nota [con el dataset de prueba (un solo día de datos), la poda de partición no se puede demostrar empíricamente en rendimiento, ya que solo existe una partición con datos, ya que el diseño está pensado para el volumen real de producción, donde sí generaría impacto medible].
+
 
 ### b) Valor estratégico y operativo
 - **Estratégico**: marketing puede dirigir campañas de retención y cross-sell específicamente
