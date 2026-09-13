@@ -70,6 +70,9 @@
 					"name": "fechaid"
 				},
 				{
+					"name": "ConIdTiempo"
+				},
+				{
 					"name": "fechaSilver"
 				},
 				{
@@ -144,7 +147,8 @@
 				"fechaEliminarDuplicados keyGenerate(output(id_tiempo as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> fechaid",
-				"fechaid select(mapColumn(",
+				"fechaid derive(id_tiempo = toInteger(toString(fecha, 'yyyyMMdd'))) ~> ConIdTiempo",
+				"ConIdTiempo select(mapColumn(",
 				"          fecha,",
 				"          id_tiempo",
 				"     ),",
