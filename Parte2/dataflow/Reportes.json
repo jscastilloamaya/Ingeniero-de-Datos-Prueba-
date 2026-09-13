@@ -32,7 +32,7 @@
 						"referenceName": "AzureSynapseAnalyticsTableReportes",
 						"type": "DatasetReference"
 					},
-					"name": "ReporteGold"
+					"name": "reportesGold"
 				}
 			],
 			"transformations": [
@@ -123,11 +123,11 @@
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> idReporte",
 				"idReporte select(mapColumn(",
-				"          {id_reporte } = id_reporte,",
+				"          id_reporte,",
 				"          id_cliente,",
 				"          id_tiempo,",
 				"          reporte_central_riesgo = {reporte centrales de riesgo},",
-				"          {monto_reporte } = {monto reporte de central de riesgo},",
+				"          monto_reporte = {monto reporte de central de riesgo},",
 				"          tiempo_mora = {tiempo en mora del reporte de riesgo}",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
@@ -153,7 +153,7 @@
 				"     allowCopyCommand: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> ReporteGold"
+				"     errorHandlingOption: 'stopOnFirstError') ~> reportesGold"
 			]
 		}
 	}
